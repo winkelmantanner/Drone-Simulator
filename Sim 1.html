@@ -17,27 +17,60 @@ var Canvas = c.getContext("2d");
 const MARGINCOUNT = 2;
 const FIELDSIZE = 20;
 const FIELDMARGINSIZE = 2;
+
 var FieldHeight = CanvasHeight - (CanvasHeight / (FIELDSIZE + (FIELDMARGINSIZE * MARGINCOUNT)) * (MARGINCOUNT * FIELDMARGINSIZE));
 var FieldWidth = FieldHeight;
 var FieldX = (CanvasWidth - FieldWidth) / 2;
 var FieldY = (CanvasHeight - FieldHeight) / 2;
+var TapeWidth = FieldHeight / (FIELDSIZE * 100) * 7;
+
+var GridNumber = 20;
 
 const BACKGROUNDCOLOR = "606070";
 const TAPECOLOR = "ffffff";
+const GREENTAPECOLOR = "00ff00";
+const REDTAPECOLOR = "ff0000";
  
 DrawBackground();
-DrawTape();
+DrawGrid();
+DrawOutline();
 
-function DrawTape()
+function DrawGrid()
 {
   var TapeWidth = FieldHeight / (FIELDSIZE * 100) * 7;
   Canvas.beginPath();
-  Canvas.rect(FieldX, FieldY, FieldHeight, TapeWidth);
-  Canvas.rect(FieldX + FieldHeight - TapeWidth, FieldY, TapeWidth, FieldHeight);
-  Canvas.rect(FieldX, FieldY + FieldHeight - TapeWidth, FieldWidth, TapeWidth);
-  Canvas.rect(FieldX, FieldY, TapeWidth, FieldHeight);
+  
+  for(var index = 0; index < 19; index++)
+  {
+    Canvas.rect(FieldX, FieldY + (FieldHeight / GridNumber * (index + 1)), FieldWidth, TapeWidth);
+  }
+  for(var index = 0; index < 19; index++)
+  {
+    Canvas.rect(FieldX + (FieldWidth / GridNumber * (index + 1)), FieldY, TapeWidth, FieldHeight);
+  }
   
   Canvas.fillStyle = "#" + TAPECOLOR;
+  Canvas.fill();
+}
+
+function DrawOutline()
+{
+  var TapeWidth = FieldHeight / (FIELDSIZE * 100) * 7;
+  Canvas.beginPath();
+  
+  Canvas.rect(FieldX + FieldHeight - TapeWidth, FieldY, TapeWidth, FieldHeight);
+  Canvas.rect(FieldX, FieldY, TapeWidth, FieldHeight);
+  Canvas.fillStyle = "#" + TAPECOLOR;
+  Canvas.fill();
+  
+  Canvas.beginPath();
+  Canvas.rect(FieldX, FieldY + FieldHeight - TapeWidth, FieldWidth, TapeWidth);
+  Canvas.fillStyle = "#" + REDTAPECOLOR;
+  Canvas.fill();
+  
+  Canvas.beginPath();
+  Canvas.rect(FieldX, FieldY, FieldWidth, TapeWidth);
+  Canvas.fillStyle = "#" + GREENTAPECOLOR;
   Canvas.fill();
 }
 
