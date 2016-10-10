@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<body border="0px">
+
+<canvas id="myCanvas" width="200" height="100" style="border:1px solid #d3d3d3;">
+Your browser does not support the HTML5 canvas tag.</canvas>
+
+<script>
+var BrowserWindow = window;
+var c = document.getElementById("myCanvas");
+var CanvasHeight = BrowserWindow.innerHeight - 30;
+var CanvasWidth = CanvasHeight;
+c.width = CanvasHeight;
+c.height = CanvasHeight;
+var Canvas = c.getContext("2d");
+
+const MARGINCOUNT = 2;
+const FIELDSIZE = 20;
+const FIELDMARGINSIZE = 2;
+var FieldHeight = CanvasHeight - (CanvasHeight / (FIELDSIZE + (FIELDMARGINSIZE * MARGINCOUNT)) * (MARGINCOUNT * FIELDMARGINSIZE));
+var FieldWidth = FieldHeight;
+var FieldX = (CanvasWidth - FieldWidth) / 2;
+var FieldY = (CanvasHeight - FieldHeight) / 2;
+
+const BACKGROUNDCOLOR = "606070";
+const TAPECOLOR = "ffffff";
+ 
+DrawBackground();
+DrawTape();
+
+function DrawTape()
+{
+  var TapeWidth = FieldHeight / (FIELDSIZE * 100) * 7;
+  Canvas.beginPath();
+  Canvas.rect(FieldX, FieldY, FieldHeight, TapeWidth);
+  Canvas.rect(FieldX + FieldHeight - TapeWidth, FieldY, TapeWidth, FieldHeight);
+  Canvas.rect(FieldX, FieldY + FieldHeight - TapeWidth, FieldWidth, TapeWidth);
+  Canvas.rect(FieldX, FieldY, TapeWidth, FieldHeight);
+  
+  Canvas.fillStyle = "#" + TAPECOLOR;
+  Canvas.fill();
+}
+
+function DrawBackground()
+{
+  Canvas.beginPath();
+  Canvas.fillStyle = "#" + BACKGROUNDCOLOR;
+  Canvas.rect(0, 0, CanvasWidth, CanvasHeight);
+  Canvas.fill();
+}
+</script>
+
+</body>
+</html>
