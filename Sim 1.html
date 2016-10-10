@@ -6,6 +6,33 @@
 Your browser does not support the HTML5 canvas tag.</canvas>
 
 <script>
+
+function GroundRobotData()
+{
+  X=0,
+  Y=0,
+  Rotation=0;
+  Color="RED";
+};
+
+const BACKGROUNDCOLOR = "606070";
+const TAPECOLOR = "ffffff";
+const GREENTAPECOLOR = "00ff00";
+const REDTAPECOLOR = "ff0000";
+const GROUNDROBOTNUMBER = 10;
+const GRIDNUMBER = 20;
+const TAPECENTIWIDTH = 7;
+const GROUNDROBOTCENTIWIDTH = 35.3;
+const GROUNDROBOTCOLOR = "ffffff";
+const MARGINCOUNT = 2;
+const FIELDSIZE = 20;
+const FIELDMARGINSIZE = 2;
+const TO_RADIANS = 0.0174533;
+const FROM_RADIANS = 57.29580;
+const RED_COLOR = "ff0000";
+const BLUE_COLOR = "0000ff";
+const ROTATION_POINTER_LENGTH = 1;
+
 var BrowserWindow = window;
 var c = document.getElementById("myCanvas");
 var CanvasHeight = BrowserWindow.innerHeight - 30;
@@ -14,39 +41,50 @@ c.width = CanvasHeight;
 c.height = CanvasHeight;
 var Canvas = c.getContext("2d");
 
-const MARGINCOUNT = 2;
-const FIELDSIZE = 20;
-const FIELDMARGINSIZE = 2;
-
 var FieldHeight = CanvasHeight - (CanvasHeight / (FIELDSIZE + (FIELDMARGINSIZE * MARGINCOUNT)) * (MARGINCOUNT * FIELDMARGINSIZE));
 var FieldWidth = FieldHeight;
 var FieldX = (CanvasWidth - FieldWidth) / 2;
 var FieldY = (CanvasHeight - FieldHeight) / 2;
 var TapeWidth = FieldHeight / (FIELDSIZE * 100) * 7;
 
-var GridNumber = 20;
+var GroundRobots = [];
 
-const BACKGROUNDCOLOR = "606070";
-const TAPECOLOR = "ffffff";
-const GREENTAPECOLOR = "00ff00";
-const REDTAPECOLOR = "ff0000";
- 
+Init();
 DrawBackground();
 DrawGrid();
 DrawOutline();
+DrawGroundBots();
+
+function DrawGroundBots()
+{
+  for(var index = 0; index < GROUNDROBOTNUMBER; index++)
+  {
+    Canvas.beginPath();
+    Canvas.moveTo(GroundRobots[index].X, GroundRobots[index].Y);
+    Canvas.lineTo(GroundRobots[index].X + Math.sin(GroundRobots[index].Rotation * TO_RADIANS) * (ROTATION_POINTER_LENGTH * FieldHeight / GRIDNUMBER), 
+      GroundRobots[index].Y + Math.cos(GroundRobots[index].Rotation * TO_RADIANS) * (ROTATION_POINTER_LENGTH * FieldHeight / GRIDNUMBER));
+    Canvas.strokeStyle = "#" + ((GroundRobots[index].Color == "RED") ? RED_COLOR : BLUE_COLOR);
+    Canvas.stroke();
+    
+    Canvas.beginPath();
+    Canvas.arc(GroundRobots[index].X, GroundRobots[index].Y, ((GROUNDROBOTCENTIWIDTH / 2) / (GRIDNUMBER * 100)) * FieldHeight, 0, 2*Math.PI);
+    Canvas.fillStyle = "#" + GROUNDROBOTCOLOR;
+    Canvas.fill();
+  }
+}
 
 function DrawGrid()
 {
-  var TapeWidth = FieldHeight / (FIELDSIZE * 100) * 7;
+  var TapeWidth = FieldHeight / (FIELDSIZE * 100) * TAPECENTIWIDTH;
   Canvas.beginPath();
   
   for(var index = 0; index < 19; index++)
   {
-    Canvas.rect(FieldX, FieldY + (FieldHeight / GridNumber * (index + 1)), FieldWidth, TapeWidth);
+    Canvas.rect(FieldX, FieldY + (FieldHeight / GRIDNUMBER * (index + 1)), FieldWidth, TapeWidth);
   }
   for(var index = 0; index < 19; index++)
   {
-    Canvas.rect(FieldX + (FieldWidth / GridNumber * (index + 1)), FieldY, TapeWidth, FieldHeight);
+    Canvas.rect(FieldX + (FieldWidth / GRIDNUMBER * (index + 1)), FieldY, TapeWidth, FieldHeight);
   }
   
   Canvas.fillStyle = "#" + TAPECOLOR;
@@ -55,7 +93,7 @@ function DrawGrid()
 
 function DrawOutline()
 {
-  var TapeWidth = FieldHeight / (FIELDSIZE * 100) * 7;
+  var TapeWidth = FieldHeight / (FIELDSIZE * 100) * TAPECENTIWIDTH;
   Canvas.beginPath();
   
   Canvas.rect(FieldX + FieldHeight - TapeWidth, FieldY, TapeWidth, FieldHeight);
@@ -80,6 +118,19 @@ function DrawBackground()
   Canvas.fillStyle = "#" + BACKGROUNDCOLOR;
   Canvas.rect(0, 0, CanvasWidth, CanvasHeight);
   Canvas.fill();
+}
+
+function Init()
+{
+  for(var index = 0; index < GROUNDROBOTNUMBER; index++)
+  {
+    GroundRobots.push(new GroundRobotData())
+    var TempRotation = index * 360.0 / GROUNDROBOTNUMBER;
+    GroundRobots[GroundRobots.length - 1].X = FieldX + FieldWidth / 2 + Math.sin(TempRotation * TO_RADIANS) * FieldHeight / GRIDNUMBER;
+    GroundRobots[GroundRobots.length - 1].Y = FieldY + FieldHeight / 2 + Math.cos(TempRotation * TO_RADIANS) * FieldHeight / GRIDNUMBER;
+    GroundRobots[GroundRobots.length - 1].Rotation = TempRotation;
+    GroundRobots[GroundRobots.length - 1].Color = (index % 2 == 0) ? "RED" : "BLUE"; 
+  }
 }
 </script>
 
